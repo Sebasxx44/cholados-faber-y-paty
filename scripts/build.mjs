@@ -29,7 +29,7 @@ function header() {
   <header class="masthead"><div class="nav-inner wrap">
     <a href="/" class="brand" aria-label="Faber y Paty, inicio">${brand}</a>
     <nav class="nav-wide" aria-label="Navegación principal">${links}</nav>
-    <div class="nav-actions"><a class="order-top" href="${whatsapp}" target="_blank" rel="noopener" aria-label="Pedir por WhatsApp">${icon("wa")}<span>Pedir por WhatsApp</span></a>
+    <div class="nav-actions"><a class="ig-contact" href="${messages}" target="_blank" rel="noopener" aria-label="Consultar por Instagram" title="Consultar por Instagram">${icon("ig")}</a><a class="order-top" href="${whatsapp}" target="_blank" rel="noopener" aria-label="Pedir por WhatsApp" title="Pedir por WhatsApp">${icon("wa")}<span>Pedir por WhatsApp</span></a>
     <details class="nav-mobile"><summary aria-label="Menú">${icon("menu")}<span>Menú</span></summary><nav aria-label="Navegación móvil">${links}<a href="${whatsapp}" target="_blank" rel="noopener">Pedir por WhatsApp</a><a href="${messages}" target="_blank" rel="noopener">Consultar por Instagram</a></nav></details></div>
   </div></header>`;
 }
