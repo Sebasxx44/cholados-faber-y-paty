@@ -1,18 +1,18 @@
 import { cp, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { site, instagram, messages, whatsapp, tiktok, sabores, sedes, reels, ingredientes } from "../datos/carta.mjs";
+import { site, instagram, messages, telefono, whatsapp, tiktok, sabores, sedes, reels, ingredientes } from "../datos/carta.mjs";
+import { product, productImage, locationPath, mapURL, homeData, productData, locationData } from "./busqueda.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const out = path.join(root, "dist");
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const theme = p => `--color:${p.color};--ink:${p.tinta};--paper:${p.papel}`;
-const product = s => "/sabores/"+s+"/";
 const scene = s => "/#sabor-"+s;
 const orderURL = p => whatsapp+"?text="+encodeURIComponent("Hola, Faber y Paty. Quisiera hacer un pedido de "+p.nombre.toLocaleLowerCase("es-CO")+".");
+const telefonoVisible = telefono.replace(/^\+57(\d{3})(\d{3})(\d{4})$/, "+57 $1 $2 $3");
 const reelURL = r => "https://www.instagram.com/reel/"+r.id+"/";
 const openingPost = "https://www.instagram.com/p/Df0cDA-DEEu/";
-const mapURL = s => "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.busqueda);
 const symbols = {
   pin:'<path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.3"/>',
   ig:'<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.9" r="1" fill="currentColor" stroke="none"/>',
@@ -24,6 +24,8 @@ const symbols = {
 };
 const icon = n => `<svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${symbols[n]}</svg>`;
 const brand = `<img class="brand-photo" src="/assets/marca/logo-nav.webp" width="336" height="193" alt="Faber &amp; Paty, cholados y granizados">`;
+const storefront = "/assets/marca/local.webp";
+const storefrontSrcset = "/assets/marca/local-640.webp 640w, /assets/marca/local-sm.webp 960w, "+storefront+" 1920w";
 const links = '<a href="/#carta">La carta</a><a href="/#videos">Videos</a><a href="/#proceso">Nuestra historia</a><a href="/#sedes">Dónde estamos</a>';
 function header() {
   return `<a class="skip" href="#contenido">Saltar al contenido</a>
@@ -35,16 +37,21 @@ function header() {
   </div></header>`;
 }
 function footer() {
-  return `<footer class="footer"><div class="wrap footer-inner"><a class="brand" href="/" aria-label="Faber y Paty, inicio">${brand}</a><p>Quimbaya y Armenia, Quindío.</p>
+  return `<footer class="footer"><div class="wrap footer-inner"><a class="brand" href="/" aria-label="Faber y Paty, inicio">${brand}</a><p>${sedes.map(s=>`<a href="${locationPath(s.id)}">${s.ciudad}</a>`).join(" y ")}, Quindío.</p>
     <nav aria-label="Contacto y redes"><a href="${whatsapp}" target="_blank" rel="noopener">WhatsApp</a><a href="${instagram}" target="_blank" rel="noopener">Instagram</a><a href="${tiktok}" target="_blank" rel="noopener">TikTok</a></nav></div></footer>`;
 }
-function layout({title,description,url="/",image="/assets/marca/local.webp",body,home=false,extra=""}) {
+function layout({title,description,url="/",image="/assets/marca/local.webp",body,data,home=false,extra=""}) {
+  const jsonLD = JSON.stringify({"@context":"https://schema.org","@graph":data}).replaceAll("<","\\u003c");
+  const verification = home && process.env.GOOGLE_SITE_VERIFICATION;
   return `<!doctype html><html lang="es-CO"><head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffc6da"><title>${esc(title)}</title><meta name="description" content="${esc(description)}">
-  <link rel="canonical" href="${site+url}"><meta property="og:type" content="website"><meta property="og:locale" content="es_CO">
+  <link rel="canonical" href="${site+url}"><meta name="robots" content="max-image-preview:large">
+  <meta property="og:type" content="website"><meta property="og:locale" content="es_CO"><meta property="og:site_name" content="Faber &amp; Paty">
   <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:image" content="${site+image}"><meta property="og:url" content="${site+url}">
-  <link rel="icon" href="/assets/marca/icono.webp" type="image/webp">
+  <link rel="icon" href="/assets/marca/favicon-48.png" sizes="48x48" type="image/png">
+  ${verification ? `<meta name="google-site-verification" content="${esc(verification)}">` : ""}
+  <script type="application/ld+json">${jsonLD}</script>
   <link rel="preload" href="/assets/fuentes/climate-crisis.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/estilo.css"><link rel="stylesheet" href="/ingredientes.css">${home ? '<link rel="stylesheet" href="/vitrina.css"><link rel="stylesheet" href="/recorridos.css"><script type="module" src="/vitrina.js"></script><script type="module" src="/recorridos.js"></script>' : ""}
   <script type="module" src="/casa.js"></script></head>
@@ -61,9 +68,9 @@ function renderStage() {
       <div class="stage-light" aria-hidden="true"><div class="opening-paper"></div>${backgrounds}</div>
       <div class="opening"><div class="opening-inner wrap">
         <div class="opening-copy"><p class="place">${icon("pin")}Quindío, Colombia</p>
-          <h1>Cholados<span>y granizados</span></h1><p class="lede">Hielo raspado, fruta y mieles de la casa. Del parque de Quimbaya al centro de Armenia.</p>
+          <h1>Cholados <span>y granizados</span></h1><p class="lede">Raspados con miel, fruta en trozos y limonadas. Del parque de Quimbaya al centro de Armenia.</p>
           <a class="button primary tour-link" href="/#sabor-cholado">Recorrer los sabores</a></div>
-        <figure class="postcard"><div class="paper-tape" aria-hidden="true"></div><picture><source media="(max-width:620px) and (min-height:671px) and (orientation:portrait)" srcset="/assets/marca/local-vertical.webp"><source media="(max-width: 700px)" srcset="/assets/marca/local-sm.webp"><img src="/assets/marca/local.webp" alt="El equipo de Faber y Paty frente al local de Armenia, junto al arco de globos de la inauguración." fetchpriority="high" decoding="async" width="1920" height="1080"></picture>
+        <figure class="postcard"><div class="paper-tape" aria-hidden="true"></div><picture><source media="(max-width:620px) and (min-height:671px) and (orientation:portrait)" srcset="/assets/marca/local-vertical-720.webp 720w, /assets/marca/local-vertical.webp 900w" sizes="min(92vw, 42svh)" width="900" height="976"><img src="${storefront}" srcset="${storefrontSrcset}" sizes="(max-width:700px) 90vw, min(50vw, 990px)" alt="El equipo de Faber y Paty frente al local de Armenia, junto al arco de globos de la inauguración." fetchpriority="high" decoding="async" width="1920" height="1080"></picture>
           <figcaption><span>El local de Armenia</span><span class="tiles" aria-hidden="true"></span></figcaption></figure>
       </div></div>
       <div class="product-stage" aria-hidden="true"><div class="prop-plane" aria-hidden="true">${props}</div><div class="rail">${bottles}</div></div>
@@ -71,7 +78,7 @@ function renderStage() {
       <button class="pause-motion enhanced" type="button" aria-label="Pausar movimiento" title="Pausar movimiento"><span class="when-playing">${icon("pause")}</span><span class="when-paused">${icon("play")}</span></button>
     </div></section>`;
 }
-const menuPhoto = p => `<img src="/assets/productos/${p.id}-sm.webp" alt="${esc(p.nombre)} de Faber y Paty" loading="lazy" decoding="async" width="450" height="620">`;
+const menuPhoto = p => `<img src="/assets/productos/${p.id}-sm.webp" alt="${esc(p.nombre)} de Faber y Paty" loading="lazy" decoding="async" width="${Math.round(p.anchoFoto*560/1512)}" height="560">`;
 function menuCard(p) {
   return `<article class="menu-card" id="sabor-${p.id}" data-group="${p.familia}" style="${theme(p)}"><a href="${product(p.id)}">
     <figure class="menu-photo">${menuPhoto(p)}</figure><div class="card-copy"><h3>${p.nombre}</h3><p>${p.nota}</p></div></a></article>`;
@@ -116,7 +123,7 @@ function history(){
   return journey("proceso","Nuestra historia",panels,"sedes","Continuar a las sedes");
 }
 function locations() {
-  return `<section class="places-section" id="sedes"><div class="wrap"><div class="section-head"><h2>Dónde estamos</h2></div><div class="places-grid">${sedes.map((s,i)=>`<article class="place-card place-${i}"><div class="place-line">${icon("pin")}<span>${s.lugar}</span></div><h3>${s.ciudad}</h3><p>${s.direccion}</p><a class="under" href="${esc(mapURL(s))}" target="_blank" rel="noopener">Cómo llegar</a></article>`).join("")}</div></div></section>`;
+  return `<section class="places-section" id="sedes"><div class="wrap"><div class="section-head"><h2>Dónde estamos</h2></div><div class="places-grid">${sedes.map((s,i)=>`<article class="place-card place-${i}"><div class="place-line">${icon("pin")}<span>${s.lugar}</span></div><h3><a href="${locationPath(s.id)}">${s.ciudad}</a></h3><p>${s.direccion}</p><div class="sede-links"><a class="under" href="${locationPath(s.id)}">Ver la sede de ${s.ciudad}</a><a class="under" href="${esc(mapURL(s))}" target="_blank" rel="noopener">Cómo llegar</a></div></article>`).join("")}</div></div></section>`;
 }
 function recipePanel(p,instance) {
   const items=p.receta.map(key=>ingredientes[key]),first=items[0];
@@ -137,21 +144,66 @@ function recipeDialog(){
 }
 function detail(p, index) {
   const next = sabores[(index+1)%sabores.length];
-  return layout({title:p.nombre+" · Faber & Paty",description:p.texto,url:product(p.id),image:"/assets/productos/"+p.id+".webp",extra:`style="${theme(p)}"`,body:`<main id="contenido" class="detail-main"><div class="wrap"><nav class="crumbs" aria-label="Ruta"><a href="/#carta">La carta</a><span aria-hidden="true">/</span><span>${p.nombre}</span></nav>
-  <article class="product-page"><figure style="background-color:${p.color};background-image:url('/assets/fondos/${p.id}.webp')"><img src="/assets/productos/${p.id}.webp" alt="Vaso de ${esc(p.nombre)}" width="800" height="1300" fetchpriority="high"></figure>
+  const source = "/assets/productos/"+p.id;
+  const widths = [Math.round(p.anchoFoto*560/1512), Math.round(p.anchoFoto*960/1512), p.anchoFoto];
+  const srcset = [source+"-sm.webp "+widths[0]+"w", source+"-md.webp "+widths[1]+"w", productImage(p.id)+" "+widths[2]+"w"].join(", ");
+  return layout({title:p.nombre+" en Quimbaya y Armenia | Faber & Paty",description:p.descripcion,url:product(p.id),image:productImage(p.id),data:productData(p),extra:`style="${theme(p)}"`,body:`<main id="contenido" class="detail-main"><div class="wrap"><nav class="crumbs" aria-label="Ruta"><a href="/#carta">La carta</a><span aria-hidden="true">/</span><span aria-current="page">${p.nombre}</span></nav>
+  <article class="product-page"><figure style="background-color:${p.color};background-image:url('/assets/fondos/${p.id}.webp')"><img src="${productImage(p.id)}" srcset="${srcset}" sizes="(max-width:620px) min(48vw, 27vh), min(40vw, 36vh, 440px)" alt="Vaso de ${esc(p.nombre)}" width="${p.anchoFoto}" height="1512" fetchpriority="high"></figure>
   <div class="detail-copy"><p class="place">${p.familia}</p><h1 class="${p.id==="maracumango"?"compact":""}">${p.nombre}</h1><p>${p.texto}</p><div class="detail-actions"><a class="button primary" href="${esc(orderURL(p))}" target="_blank" rel="noopener">${icon("wa")} Pedir por WhatsApp</a><a class="under" href="#ingredientes">Ver ingredientes</a></div><div class="detail-links"><a class="under" href="${messages}" target="_blank" rel="noopener">Consultar por Instagram</a><a class="under" href="${scene(p.id)}">Ver en el escaparate</a></div></div></article>
   <section id="ingredientes" class="detail-recipe" aria-labelledby="receta-ficha-${p.id}">${recipePanel(p,"ficha")}</section>
+  <section class="pickup-section"><h2>Dónde pedir ${p.nombre.toLocaleLowerCase("es-CO")}</h2><ul>${sedes.map(s=>`<li><a class="under" href="${locationPath(s.id)}">${s.ciudad}</a><span>${s.calle}</span></li>`).join("")}</ul></section>
   <div class="more"><a class="under" href="/#carta">Volver a la carta</a><a class="under" href="${product(next.id)}">Siguiente sabor · ${next.nombre}</a></div></div></main>`});
 }
+
+function localMenu(s) {
+  const groups = [
+    {name:"Cholados y raspados",items:sabores.filter(p=>p.familia==="Con barquillo")},
+    {name:"Limonadas en "+s.ciudad,items:sabores.filter(p=>p.familia==="Limonadas")}
+  ];
+  return groups.map(group=>`<section class="local-menu-group"><h2>${group.name}</h2><ul>${group.items.map(p=>`
+    <li><a href="${product(p.id)}"><img src="/assets/productos/${p.id}-sm.webp" alt="" width="42" height="56" loading="lazy" decoding="async">
+    <span><strong>${p.nombre}</strong><small>${p.nota}</small></span></a></li>`).join("")}</ul></section>`).join("");
+}
+
+function locationPage(s) {
+  const other = sedes.find(place=>place.id!==s.id);
+  const inquiry = whatsapp+"?text="+encodeURIComponent("Hola, Faber y Paty. Quisiera consultar el horario y los sabores de hoy en "+s.ciudad+".");
+  const heading = "Cholados y limonadas";
+  const city = "en "+s.ciudad;
+  const sources = s.foto===storefront ? `srcset="${storefrontSrcset}" sizes="(max-width:760px) 90vw, min(50vw, 930px)"` : "";
+  return layout({
+    title:heading+" "+city+" | Faber & Paty", description:s.descripcion, url:locationPath(s.id),
+    image:s.foto, data:locationData(s), extra:`data-sede="${s.id}"`,
+    body:`<main id="contenido" class="detail-main local-page"><div class="wrap">
+    <nav class="crumbs" aria-label="Ruta"><a href="/#sedes">Dónde estamos</a><span aria-hidden="true">/</span><span aria-current="page">${s.ciudad}</span></nav>
+    <article class="local-intro"><div><p class="place">${icon("pin")}${s.lugar} · Quindío</p><h1 class="display">${heading} <span>${city}</span></h1>
+    <p class="local-story">${s.introduccion}</p><address>${s.direccion}</address>
+    <div class="sede-links"><a class="button primary" href="${esc(mapURL(s))}" target="_blank" rel="noopener">${icon("pin")} Cómo llegar</a>
+    <a class="under" href="${esc(inquiry)}" target="_blank" rel="noopener">${icon("wa")} Consultar horario</a></div></div>
+    <figure><img src="${s.foto}" ${sources} width="${s.ancho}" height="${s.alto}" alt="${esc(s.alt)}" fetchpriority="high"><figcaption>${s.pie}</figcaption></figure></article>
+    <div class="local-menu" id="carta-local">${localMenu(s)}</div>
+    <div class="local-contact"><div><h2>Pedidos en ${s.ciudad}</h2><a class="under" href="${esc(inquiry)}" target="_blank" rel="noopener">${icon("wa")} WhatsApp ${telefonoVisible}</a></div>
+    <a class="under" href="${s.referencia}" target="_blank" rel="noopener">${s.enlace}</a></div>
+    <div class="more"><a class="under" href="/#carta">Ver toda la carta</a><a class="under" href="${locationPath(other.id)}">Sede de ${other.ciudad}</a></div>
+    </div></main>`
+  });
+}
+
 await mkdir(out,{recursive:true});
 await Promise.all(["web","assets"].map(dir=>cp(path.join(root,dir),dir==="assets"?path.join(out,dir):out,{recursive:true})));
-const page = layout({title:"Faber & Paty · Cholados y granizados en Quindío",description:"Conoce los cholados, granizados y limonadas de Faber y Paty. Recorre los seis sabores y encuentra el puesto en Quimbaya y el local de Armenia.",home:true,
+const page = layout({title:"Faber & Paty | Cholados y raspados en Quimbaya y Armenia",description:"Prueba el cholado con fruta, el raspado con miel y las dos limonadas de Faber & Paty. Encuéntranos en el parque de Quimbaya y en la Calle 20 de Armenia.",data:homeData(),home:true,
   body:`<main id="contenido">${renderStage()}${menu()}${videos()}${history()}${locations()}</main>${recipeDialog()}`});
-await writeFile(path.join(out,"index.html"),page);
-for (const [i,p] of sabores.entries()) {
-  const dest=path.join(out,"sabores",p.id); await mkdir(dest,{recursive:true});
-  await writeFile(path.join(dest,"index.html"),detail(p,i));
+const pages = [
+  {url:"/", image:"/assets/marca/local.webp", html:page},
+  ...sabores.map((p,i)=>({url:product(p.id), image:productImage(p.id), html:detail(p,i)})),
+  ...sedes.map(s=>({url:locationPath(s.id), image:s.foto, html:locationPage(s)}))
+];
+for (const entry of pages) {
+  const dest = path.join(out,entry.url);
+  await mkdir(dest,{recursive:true});
+  await writeFile(path.join(dest,"index.html"),entry.html);
 }
-await writeFile(path.join(out,"sitemap.xml"),'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+["/",...sabores.map(p=>product(p.id))].map(p=>"<url><loc>"+site+p+"</loc></url>").join("")+"</urlset>");
+const sitemap = pages.map(({url,image})=>`  <url><loc>${esc(site+url)}</loc><image:image><image:loc>${esc(site+image)}</image:loc></image:image></url>`);
+await writeFile(path.join(out,"sitemap.xml"),'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n'+sitemap.join("\n")+"\n</urlset>\n");
 await writeFile(path.join(out,"robots.txt"),"User-agent: *\nAllow: /\nSitemap: "+site+"/sitemap.xml\n");
-console.log("Faber & Paty · portada y "+sabores.length+" fichas en dist/");
+console.log("Faber & Paty · "+pages.length+" páginas en el sitemap de "+site);

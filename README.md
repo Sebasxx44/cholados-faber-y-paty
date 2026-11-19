@@ -6,11 +6,19 @@ Sitio para recorrer los seis productos de la carta de Faber & Paty, ver tres vid
 
 ## Desarrollo
 
-Se necesita Node.js 20 o posterior. `npm run build` genera la portada, seis fichas de producto y el mapa del sitio en `dist/`. La carpeta se puede servir con cualquier servidor HTTP estático. Vercel ejecuta el mismo comando de compilación.
+Se necesita Node.js 20 o posterior. `npm run build` genera la portada, seis fichas de producto, las páginas de las sedes, `robots.txt` y `sitemap.xml` en `dist/`. La carpeta se puede servir con cualquier servidor HTTP estático. Vercel ejecuta el mismo comando de compilación.
 
 - `datos/carta.mjs` reúne los sabores, las sedes y los videos.
 - `scripts/build.mjs` genera el HTML. `web/` contiene los estilos y la interacción.
 - `assets/modelos/` contiene las mallas GLB de los seis vasos y sus complementos. Usan como textura los WebP de `assets/productos/`. El visor carga el modelo enfocado. El catálogo y las fichas también funcionan con imágenes estáticas.
+
+## Dominio e indexación
+
+Las direcciones, imágenes, títulos y datos estructurados de las nueve páginas se publican en el HTML. Las URLs canónicas, el mapa del sitio y los identificadores de cada sede comparten un único origen en `datos/carta.mjs`. La configuración inicial usa el dominio de producción de Vercel.
+
+Cuando `choladosfaberypaty.online` esté registrado, agrégalo al proyecto de Vercel y configura los registros que indique el panel. Una vez que sirva el sitio por HTTPS, fija `SITE_URL=https://choladosfaberypaty.online` en el entorno de producción y vuelve a desplegar. Configura una redirección permanente del dominio anterior y, si se usa, de la variante con `www`, al mismo camino en el dominio principal. Comprueba la portada, una ficha y una sede antes de anunciar el cambio. [Guía de migraciones de Google](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes?hl=es)
+
+La propiedad de dominio en Search Console se verifica mediante DNS. Envía `/sitemap.xml` desde esa propiedad y comprueba la portada y las dos sedes con la inspección de URL. Si también administras la propiedad anterior, solicita el cambio de dirección. Para verificar una propiedad de prefijo de URL mediante la etiqueta HTML, la compilación admite el valor público de `GOOGLE_SITE_VERIFICATION`. [Verificación en Search Console](https://support.google.com/webmasters/answer/9008080?hl=es)
 
 ## Material de referencia
 
