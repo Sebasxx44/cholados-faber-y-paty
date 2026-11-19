@@ -1,0 +1,98 @@
+/* Each reel or photograph has a full page of its own, also in the plain HTML reading order. */
+.journey{
+  --stride:76svh;
+  position:relative;
+  scroll-margin-top:calc(-1 * var(--nav-h));
+}
+.journey-window{position:relative}
+.journey-skip{position:absolute;top:calc(var(--nav-h) + 5px);left:var(--edge);z-index:5;background:var(--cream);color:var(--wine);width:1px;height:1px;overflow:hidden;clip-path:inset(50%);pointer-events:none}
+.journey-skip:focus-visible{width:auto;height:auto;clip-path:none;padding:10px 16px;pointer-events:auto}
+.journey-slide{position:relative;isolation:isolate;background:var(--sheet);color:var(--tone-ink);min-width:0}
+.journey-inner {
+  display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);
+  align-items:center;gap:clamp(26px,6vw,112px);
+  height:100vh;height:100svh;
+  padding-top:calc(var(--nav-h) + clamp(12px,3vh,50px));
+  padding-bottom:clamp(55px,8vh,110px);
+}
+.journey-copy{min-width:0;align-self:center}
+.journey-context{display:flex;align-items:baseline;flex-wrap:wrap;gap:.42em;margin-bottom:clamp(14px,2.4vh,30px);font-size:clamp(.86rem,1.12vw,1.19rem);font-weight:650}
+.journey-copy h3 {
+  font:400 clamp(38px,5.55vw,102px)/1.025 "Climate Crisis","Arial Black",sans-serif;
+  font-variation-settings:"YEAR" 1995;letter-spacing:-.052em;text-wrap:balance;
+}
+.journey-copy>p:not(.journey-context),.journey-copy blockquote>p:not(.quote-lead){
+  font-size:clamp(1.02rem,1.36vw,1.42rem);font-weight:490;line-height:1.44;max-width:35ch;
+}
+.journey-copy>h3+p{margin-top:clamp(16px,2.3vh,28px)}
+.journey-copy .under{margin-top:clamp(12px,2vh,24px);font-size:.92rem}
+.journey-nav{display:none}
+.with-track{height:calc(100svh + var(--tramos)*var(--stride));height:calc(100dvh + var(--tramos)*var(--stride))}
+.with-track .journey-window{position:sticky;top:0;isolation:isolate;height:100vh;height:100dvh;overflow:hidden}
+.with-track .journey-inner{height:100%}
+.with-track .journey-track{display:flex;width:100%;height:100%;transition:transform .54s cubic-bezier(.28,.76,.20,1)}
+.with-track .journey-slide{flex:0 0 100%;width:100%;height:100%}
+.with-track .journey-nav{
+  display:flex;position:absolute;z-index:2;right:var(--edge);bottom:max(8px,env(safe-area-inset-bottom));
+  gap:4px;align-items:center;color:var(--nav-ink);transition:color .2s;
+}
+.journey-nav button{min-height:44px;padding:6px 12px;text-underline-offset:4px;font-size:.92rem;font-weight:650}
+.journey-nav button:not(:disabled){text-decoration:underline}.journey-nav button:disabled{opacity:.46;cursor:default}
+.video-mieles{--sheet:#50172f;--tone-ink:#ffcedb;--mat:#f8a7c9}
+.video-apertura{--sheet:#163f3b;--tone-ink:#dbf9d8;--mat:#9adaae}
+.video-nueva-sede{--sheet:#3d2a50;--tone-ink:#f1dfff;--mat:#c9a4df}
+.journey .reel {
+  display:block;position:relative;justify-self:center;min-width:0;min-height:0;
+  height:min(68svh,790px);max-height:100%;max-width:100%;aspect-ratio:9/16;
+  background:var(--mat);border:clamp(5px,.55vw,10px) solid var(--mat);border-radius:6px;
+  transform:rotate(1.7deg);box-shadow:8px 12px 0 color-mix(in srgb,var(--mat) 23%,transparent);
+}
+.journey .reel>img,.history-photo>img,.history-photo>picture,.history-photo picture img{display:block;width:100%;height:100%;object-fit:cover}
+.journey .reel .watch{position:absolute;left:50%;bottom:clamp(12px,2.1vh,24px);transform:translateX(-50%);display:inline-flex;gap:9px;align-items:center;justify-content:center;min-height:44px;padding:8px 16px;white-space:nowrap;border-radius:32px;background:var(--cream);color:var(--wine);font-weight:700;box-shadow:0 2px 12px #25091130}
+.watch .icon{width:16px;height:16px}.reel:hover .watch,.reel:focus-visible .watch{background:white}
+.history-puesto{--sheet:#f7cc70;--tone-ink:#492818}
+.history-preparacion{--sheet:#ffbdcf;--tone-ink:#641a36}
+.history-montaje{--sheet:#bad8f0;--tone-ink:#15384e}
+.history-apertura{--sheet:#daeaa7;--tone-ink:#283f27}
+.history-photo {
+  justify-self:center;position:relative;min-width:0;min-height:0;width:auto;height:min(66svh,750px);max-height:100%;max-width:100%;aspect-ratio:3/4;
+  padding:clamp(6px,.65vw,12px);background:#fff5e6;transform:rotate(-1.6deg);
+  box-shadow:0 2px 2px #2817181c,0 18px 30px -24px #3018238f;
+}
+.history-puesto .history-photo img{object-position:center 45%}
+.history-preparacion .journey-copy{order:2}
+.history-preparacion .history-photo{transform:rotate(1.6deg)}
+.history-montaje .history-photo img{object-position:50% 41%}
+.history-apertura .journey-inner{grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(24px,4.5vw,80px)}
+.history-apertura .history-photo{width:100%;height:auto;aspect-ratio:16/10}
+.journey-copy blockquote{margin:0}
+.journey-copy blockquote .quote-lead{font:400 clamp(19px,2.1vw,36px)/1.15 "Climate Crisis","Arial Black",sans-serif;font-variation-settings:"YEAR" 1995;letter-spacing:-.04em;margin:clamp(12px,2vh,24px) 0 6px;text-wrap:balance}
+.history-apertura .journey-copy h3{font-size:clamp(36px,4.85vw,88px)}
+@media(max-width:830px) and (min-width:681px){
+ .journey-inner{gap:20px}.journey-copy h3{font-size:clamp(33px,5.1vw,48px)}.history-apertura .journey-copy h3{font-size:4.9vw}
+}
+@media(max-width:680px) and (orientation:portrait){
+ .journey-inner,.history-apertura .journey-inner{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);align-content:stretch;gap:clamp(12px,2.5svh,25px);padding-top:calc(var(--nav-h) + clamp(12px,2svh,24px));padding-bottom:max(60px,8svh)}
+ .journey-copy{align-self:start}.journey-context{margin-bottom:8px;font-size:.84rem;line-height:1.25}
+ .journey-copy h3{font-size:clamp(28px,8.3vw,51px);line-height:1.04;text-wrap:balance}
+ .journey-copy>h3+p{margin-top:8px}
+ .journey-copy>p:not(.journey-context),.journey-copy blockquote>p:not(.quote-lead){font-size:clamp(.94rem,3.8vw,1.08rem);line-height:1.34;max-width:40ch}
+ .reel-profile{display:none}
+ .journey .reel,.history-photo,.history-apertura .history-photo{height:100%;max-height:100%;width:auto;max-width:94%;align-self:center}
+ .history-photo{aspect-ratio:3/4}.history-apertura .history-photo{aspect-ratio:900/976}
+ .history-preparacion .journey-copy{order:0}
+ .history-apertura .journey-copy h3{font-size:clamp(26px,7.6vw,42px)}
+ .journey-copy blockquote .quote-lead{font-size:clamp(17px,4.4vw,24px);margin:8px 0 3px}
+ .journey-copy .under{margin-top:4px;font-size:.84rem}
+}
+@media(max-height:510px) and (orientation:landscape){
+ .journey-inner,.history-apertura .journey-inner{gap:16px;padding-top:calc(var(--nav-h) + 6px);padding-bottom:43px}
+  .history-apertura .journey-inner{grid-template-columns:minmax(0,1.5fr) minmax(0,.85fr)}
+ .journey-context{font-size:.8rem;line-height:1.15;margin-bottom:6px}
+ .journey-copy h3,.history-apertura .journey-copy h3{font-size:clamp(24px,4.35vw,46px)}
+ .journey-copy>h3+p{margin-top:5px}.journey-copy>p:not(.journey-context),.journey-copy blockquote>p:not(.quote-lead){font-size:.9rem;line-height:1.25}
+ .journey-copy blockquote .quote-lead{font-size:clamp(15px,2.1vw,21px);margin:5px 0 3px}
+ .journey-copy .under{min-height:33px;margin-top:1px}.journey .reel,.history-photo{height:100%}
+ .journey-nav{bottom:0!important}
+}
+@media(prefers-reduced-motion:reduce){.with-track .journey-track,.with-track .journey-nav{transition:none}}

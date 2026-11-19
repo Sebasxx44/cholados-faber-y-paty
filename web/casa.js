@@ -1,4 +1,6 @@
+import { initRecipes } from "./ingredientes.js";
 document.documentElement.classList.add("js");
+initRecipes();
 
 const menu=document.querySelector(".nav-mobile");
 document.addEventListener("click",e=>{

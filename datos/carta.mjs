@@ -1,7 +1,20 @@
 export const site = "https://cholados-faber-y-paty.vercel.app";
 export const instagram = "https://www.instagram.com/choladosfaberypaty/";
 export const messages = "https://ig.me/m/choladosfaberypaty";
+export const whatsapp = "https://wa.me/573122075750";
 export const tiktok = "https://www.tiktok.com/@choladospatyfaber";
+
+export const ingredientes = {
+  raspado: { pieza: "hielo", nombre: "Hielo raspado", detalle: "La base fría que recoge las mieles." },
+  hielo: { pieza: "hielo", nombre: "Hielo", detalle: "Mantiene el vaso bien frío." },
+  fruta: { pieza: "pina", nombre: "Fruta en trozos", detalle: "La fruta va en capas con el hielo." },
+  miel: { pieza: "miel", nombre: "Mieles de la casa", detalle: "Bañan el hielo y le dan su color." },
+  barquillo: { pieza: "barquillo", nombre: "Barquillos", detalle: "El toque crujiente que corona el vaso." },
+  mango: { pieza: "mango", nombre: "Mango", detalle: "La parte dulce del maracumango." },
+  maracuya: { pieza: "maracuya", nombre: "Maracuyá", detalle: "Su pulpa aporta el sabor ácido de la fruta." },
+  limon: { pieza: "lima", nombre: "Limón", detalle: "La base cítrica de la limonada." },
+  cobertura: { pieza: "cobertura", nombre: "Cobertura oscura", detalle: "La última capa, entre los barquillos." }
+};
 
 export const sabores = [
   {
@@ -9,6 +22,7 @@ export const sabores = [
     nota: "Fruta en capas y hielo raspado",
     texto: "Hielo raspado, fruta y mieles de colores. Los barquillos se sirven al final, para comerlos crujientes.",
     corto: "Fruta, hielo raspado y barquillos.",
+    receta: ["raspado", "fruta", "miel", "barquillo"],
     color: "#ffa9d0", tinta: "#62142e", papel: "#ffe4ef",
     adornos: ["pina", "barquillo", "hielo", "miel"]
   },
@@ -17,6 +31,7 @@ export const sabores = [
     nota: "Mango y maracuyá",
     texto: "Mango y maracuyá se mezclan en un vaso de hielo y fruta. Los tonos amarillos y rojos se encuentran debajo de los barquillos.",
     corto: "Mango, maracuyá y hielo.",
+    receta: ["mango", "maracuya", "hielo", "barquillo"],
     color: "#8fd8f6", tinta: "#173b52", papel: "#d9f4fc",
     adornos: ["mango", "maracuya", "barquillo", "hielo"]
   },
@@ -25,6 +40,7 @@ export const sabores = [
     nota: "Hielo fino con barquillos",
     texto: "Hielo de textura fina con una cobertura oscura y dos barquillos crujientes.",
     corto: "Hielo fino y barquillos crujientes.",
+    receta: ["hielo", "cobertura", "barquillo"],
     color: "#f6e660", tinta: "#4a3019", papel: "#fff7b1",
     adornos: ["chocolate", "barquillo", "hielo", "chocolate"]
   },
@@ -33,6 +49,7 @@ export const sabores = [
     nota: "Hielo raspado y miel",
     texto: "Hielo raspado con miel que va tiñendo el vaso de rojo. Arriba quedan el hielo y los barquillos.",
     corto: "Hielo raspado, miel y barquillo.",
+    receta: ["raspado", "miel", "barquillo"],
     color: "#bda4f2", tinta: "#43264f", papel: "#e9dbff",
     adornos: ["miel", "hielo", "barquillo", "hielo"]
   },
@@ -41,6 +58,7 @@ export const sabores = [
     nota: "Cítrica y tropical",
     texto: "Limón y maracuyá en una bebida fría, de color ámbar y sabor cítrico.",
     corto: "Limón, maracuyá y hielo.",
+    receta: ["maracuya", "limon", "hielo"],
     color: "#85dfc7", tinta: "#174a43", papel: "#d3f5e7",
     adornos: ["maracuya", "lima", "hielo", "maracuya"]
   },
@@ -49,6 +67,7 @@ export const sabores = [
     nota: "La limonada roja de la casa",
     texto: "La limonada roja de Faber & Paty se sirve bien fría. Pídela en el puesto del parque o en el local de Armenia.",
     corto: "La limonada roja de Faber & Paty.",
+    receta: ["limon", "hielo"],
     color: "#ff998d", tinta: "#671f32", papel: "#ffdad5",
     adornos: ["lima", "hielo", "miel", "lima"]
   }
@@ -60,7 +79,7 @@ export const sedes = [
 ];
 
 export const reels = [
-  {id:"DfViRQFNpjt", slug:"mieles", titulo:"Entre mieles y hielo", lugar:"Quimbaya"},
-  {id:"DfxR0fpBfVq", slug:"apertura", titulo:"Abrimos en Armenia", lugar:"Armenia"},
-  {id:"DfvSFLePrBE", slug:"nueva-sede", titulo:"Del puesto al nuevo local", lugar:"Quindío"}
+  {id:"DfViRQFNpjt", slug:"mieles", titulo:"Entre mieles y hielo", lugar:"Quimbaya", segundos:34, texto:"Mira lo que pasa cuando las mieles de la casa tocan el hielo del cholado."},
+  {id:"DfxR0fpBfVq", slug:"apertura", titulo:"Abrimos en Armenia", lugar:"Armenia", segundos:15, texto:"Faber y Paty te invitan a conocer el local de la Calle 20."},
+  {id:"DfvSFLePrBE", slug:"nueva-sede", titulo:"Del puesto al nuevo local", lugar:"Quindío", segundos:59, texto:"Acompaña a la familia desde el puesto en Quimbaya hasta la puerta del nuevo local."}
 ];

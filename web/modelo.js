@@ -52,12 +52,12 @@ export function makeViewer() {
   for(const k of [gl.TEXTURE_WRAP_S,gl.TEXTURE_WRAP_T]) gl.texParameteri(gl.TEXTURE_2D,k,gl.CLAMP_TO_EDGE);
   for(const k of [gl.TEXTURE_MIN_FILTER,gl.TEXTURE_MAG_FILTER]) gl.texParameteri(gl.TEXTURE_2D,k,gl.LINEAR);
   const models=new Map();
-  let active=null, buffers=[], draws=[], serial=0, aspect=1, yaw=0, pitch=0;
+  let active=null, activeSlug="", buffers=[], draws=[], serial=0, aspect=1, yaw=0, pitch=0;
   let lost=false,paintedY=NaN,paintedPitch=NaN;
   function clear(){
     ++serial;
     active?.classList.remove("has-model");
-    active=null;
+    active=null;activeSlug="";
     canvas.remove();
     for(const b of buffers) gl.deleteBuffer(b);
     buffers=[]; draws=[];
@@ -93,10 +93,11 @@ export function makeViewer() {
   }
   async function select(link){
     const holder=link?.querySelector(".glass-form");
-    if(active===holder||lost) return;
+    const slug=link?.dataset.slug;
+    if((active===holder&&activeSlug===slug)||lost) return;
     clear();
     if(!holder) return;
-    const id=serial,slug=link.dataset.slug,photo=holder.querySelector("img");
+    const id=serial,photo=holder.querySelector("img");
     try{
       if(!models.has(slug)) models.set(slug,fetch("/assets/modelos/"+slug+".glb").then(r=>{
         if(!r.ok) throw Error("Modelo no disponible");
@@ -125,7 +126,7 @@ export function makeViewer() {
       gl.bindTexture(gl.TEXTURE_2D,texture);
       gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,photo);
       aspect=photo.naturalWidth/photo.naturalHeight;
-      active=holder;holder.append(canvas);resize();holder.classList.add("has-model");
+      active=holder;activeSlug=slug;holder.append(canvas);resize();holder.classList.add("has-model");
     }catch{if(id===serial) clear();}
   }
   return {select,paint,resize};

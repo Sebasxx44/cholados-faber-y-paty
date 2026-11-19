@@ -1,3 +1,4 @@
+import { createWheelGesture } from "./gesto.js";
 const runway=document.querySelector(".runway");
 if(runway) startShowcase();
 
@@ -6,6 +7,15 @@ function startShowcase() {
   const rail=stage.querySelector(".rail"),propPlane=stage.querySelector(".prop-plane"),captions=board.querySelector(".captions");
   const pause=board.querySelector(".pause-motion"),header=document.querySelector(".masthead");
   const gifts=[...rail.querySelectorAll(".glass")];
+  // A real fragment target prevents WebKit from jumping back to a catalog card after images load.
+  const stops=gifts.map(gift=>{
+    const id="sabor-"+gift.dataset.slug,card=document.getElementById(id);
+    if(card) card.id="ficha-"+gift.dataset.slug;
+    const stop=document.createElement("span");
+    stop.id=id;stop.className="scene-stop";stop.setAttribute("aria-hidden","true");
+    runway.append(stop);
+    return stop;
+  });
   const scenes=gifts.map((link,i)=>({
     link,img:link.querySelector("img"),back:board.querySelectorAll(".light-set")[i],
     props:propPlane.children[i],label:captions.children[i]
@@ -15,7 +25,9 @@ function startShowcase() {
   document.documentElement.classList.add("js");
   let start=0,travel=0,step=1,w=1,h=1,inView=false,focus=-1,frame=0,prev=0,pos=0,goal=0,ready=false,drawn=NaN;
   let paused=false,mouseX=0,mouseY=0,aimX=0,aimY=0,viewer=null,viewerLoading=false,modelIndex=-1,arrivalAt=0;
-  let swipe=null,ignoreClick=0,lastWheelTime=-1000,lastDelta=0,wheelStart=0,wheelFading=false,capture=false,lastAxis=false;
+  let swipe=null,ignoreClick=0,capture=false;
+  let focusFirst=false;
+  const isNewGesture=createWheelGesture();
   const saving=navigator.connection?.saveData===true;
   function prepare(i,big=false){
     const scene=scenes[i-1];if(!scene) return;
@@ -63,12 +75,13 @@ function startShowcase() {
       scenes.forEach((s,j)=>{
         const current=j+1===index;
         s.link.setAttribute("aria-hidden",String(!current));s.link.tabIndex=current?0:-1;
-        s.label.setAttribute("aria-hidden",String(!current));s.props.classList.toggle("visible",current);
+        s.label.inert=!current;s.label.setAttribute("aria-hidden",String(!current));s.props.classList.toggle("visible",current);
       });
       if(active){
         prepare(index,true);
         prepare((index%last)+1);
         prepare(((index+last-2)%last)+1);
+        if(focusFirst&&index===1){active.link.focus({preventScroll:true});focusFirst=false;}
       }
     }
     syncModel();
@@ -115,6 +128,7 @@ function startShowcase() {
     w=board.clientWidth;h=board.clientHeight;
     travel=Math.max(1,runway.offsetHeight-h);
     step=Math.floor(travel)/last;
+    stops.forEach((stop,i)=>{stop.style.top=Math.round((i+1)*step)+"px"});
     drawn=NaN;viewer?.resize();readScroll();
   }
   function readScroll(){
@@ -166,17 +180,10 @@ function startShowcase() {
     if(!dir||local<-.75) return;
     const returning=local>travel+.75;
     if(returning&&(e.deltaY>=0||local+e.deltaY*unit>travel)) return;
-    const gap=e.timeStamp-lastWheelTime,mag=Math.abs(delta),old=Math.abs(lastDelta);
-    const notch=gap>=70&&mag>=40&&mag===old;
-    const impulse=e.timeStamp-wheelStart>230&&old<=10&&mag>=3*old+16;
-    const fading=mag<old||(wheelFading&&mag===old);
-    const tail=fading&&(wheelFading||mag>=old*.30);
-    const inTransition=pos!==goal && gap<650;
-    const continued=!returning&&dir===Math.sign(lastDelta)&&(gap<180||inTransition||(tail&&gap<490))&&!notch&&!impulse&&!(horizontal!==lastAxis&&gap>65);
-    wheelFading=continued&&fading;lastAxis=horizontal;lastWheelTime=e.timeStamp;lastDelta=delta;
     const next=returning?last:Math.round(local/step)+dir;
-    if(!continued){wheelStart=e.timeStamp;capture=next>=0&&next<=last;}
-    if(capture){e.preventDefault();if(!continued) go(next);}
+    const fresh=isNewGesture(e,delta,horizontal,pos!==goal,returning);
+    if(fresh) capture=next>=0&&next<=last;
+    if(capture){e.preventDefault();if(fresh) go(next);}
   }
   function touchStart(e){
     swipe=null;ignoreClick=0;
@@ -228,8 +235,7 @@ function startShowcase() {
   reduce.addEventListener("change",()=>{toggleMotion();readScroll()});
   opening.querySelector(".tour-link").addEventListener("click",e=>{
     if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey) return;
-    e.preventDefault();go(1);
-    gifts[0].focus({preventScroll:true});
+    e.preventDefault();focusFirst=e.detail===0;go(1);
   });
   function hashScene(){
     const i=gifts.findIndex(a=>location.hash==="#sabor-"+a.dataset.slug);

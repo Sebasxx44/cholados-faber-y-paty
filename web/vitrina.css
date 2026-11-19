@@ -2,6 +2,7 @@
 .runway{--stride:75svh;background:#ffc3d7;position:relative}
 .board{position:sticky;top:0;height:100vh;height:100svh;min-height:300px;isolation:isolate;overflow:hidden;color:var(--berry)}
 .js .runway{height:calc(100svh + var(--steps)*var(--stride))}
+.scene-stop{position:absolute;left:0;width:1px;height:1px;pointer-events:none;scroll-margin-top:calc(-1 * var(--nav-h))}
 .stage-light,.opening-paper,.light-set,.opening,.product-stage,.prop-plane,.rail,.ingredients,.captions{position:absolute;inset:0}
 .stage-light{z-index:-1;overflow:hidden}
 .opening-paper{background:radial-gradient(ellipse at 21% 44%,#ffd8e3 0,transparent 62%),linear-gradient(162deg,#ffcddc 8%,#ffa9c9 71%,#ff98bc 100%)}
@@ -81,3 +82,16 @@
  :root{--nav-h:51px}.nav-inner .brand-photo{height:44px}.opening-inner{padding-block:58px 18px;gap:24px}.opening h1{font-size:min(6.3vw,11svh)}.opening .place{margin-bottom:6px}.lede{font-size:.94rem;margin-block:8px 10px}.tour-link{min-height:38px;padding:6px 14px}.postcard{max-height:72svh;width:min(100%,92svh)}.postcard figcaption{font-size:.72rem}.product-stage{top:53px;bottom:21svh}.captions{min-height:21svh}.product-caption h2,.product-caption.long h2{font-size:min(5vw,10svh)}.product-caption p{font-size:.85rem;margin-top:3px}.pause-motion{bottom:7px}
 }
 @media(prefers-reduced-motion:reduce){.ingredient img{animation:none}.pause-motion{display:none!important}}
+/* Reserve space for the ingredient control without cropping the glass. */
+.product-stage{bottom:max(174px,23svh)}
+.captions{min-height:max(174px,23svh)}
+@media(max-width:620px) and (orientation:portrait){
+  .product-stage{bottom:max(165px,24svh)}
+  .captions{min-height:max(165px,24svh)}
+  .recipe-trigger{margin-top:9px}
+}
+@media(max-height:530px) and (orientation:landscape){
+  .product-stage{bottom:max(101px,24svh)}.captions{min-height:max(101px,24svh)}
+  .product-caption h2,.product-caption.long h2{font-size:min(5vw,7.6svh)}
+  .product-caption p{margin:2px 0 0}.recipe-trigger{min-height:36px;margin-top:3px;padding:4px 14px;font-size:.85rem}
+}

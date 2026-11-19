@@ -18,4 +18,8 @@ Se reconstruyó la foto de apertura a partir de las fotografías de la misma ina
 
 Los videos se reproducen desde las publicaciones de la cuenta cuando la persona los abre. [Preparación de las mieles](https://www.instagram.com/reel/DfViRQFNpjt/) · [Apertura de Armenia](https://www.instagram.com/reel/DfxR0fpBfVq/) · [Del puesto al nuevo local](https://www.instagram.com/reel/DfvSFLePrBE/)
 
+El recorrido de la historia utiliza fotogramas del puesto en Quimbaya, el servicio de las mieles y la adecuación del local. El mensaje de los 23 años corresponde a la publicación de la inauguración. [El puesto](https://www.tiktok.com/@choladospatyfaber/video/7701400293807820038) · [Las mieles](https://www.instagram.com/reel/DfViRQFNpjt/) · [El montaje](https://www.instagram.com/reel/DfpfHpDucQ_/) · [La inauguración](https://www.instagram.com/p/Df0cDA-DEEu/)
+
+Las fichas y la vitrina comparten los desgloses de la carta y los modelos de ingredientes. Las piezas se pueden explorar con el dedo, el ratón o las flechas del teclado. El enlace de WhatsApp de cada ficha prepara un mensaje con el nombre del producto.
+
 El diseño se trabajó con [Unslop de Damir](https://github.com/heydamir/unslop), publicado bajo [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Las tipografías locales Climate Crisis y DM Sans incluyen sus licencias SIL Open Font License en `assets/fuentes/`.
