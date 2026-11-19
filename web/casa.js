@@ -16,32 +16,45 @@ for(const button of document.querySelectorAll("[data-filter]")){
   });
 }
 
-const player=document.querySelector(".player");
-if(player && typeof player.showModal==="function"){
-  const box=player.querySelector(".player-box"),source=player.querySelector(".player-source");
-  let trigger;
-  for(const link of document.querySelectorAll("[data-reel]")){
-    link.addEventListener("click",e=>{
-      if(e.defaultPrevented||e.button||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey) return;
-      e.preventDefault();
-      trigger=link;
-      player.querySelector("h2").textContent=link.dataset.title;
-      source.href=link.href;
-      const frame=document.createElement("iframe");
-      frame.title=link.dataset.title+" en Instagram";
-      frame.src=link.href+"embed/";
-      frame.allow="autoplay; encrypted-media; fullscreen; picture-in-picture";
-      frame.allowFullscreen=true;
-      frame.referrerPolicy="strict-origin-when-cross-origin";
-      box.replaceChildren(frame);player.showModal();
-      player.querySelector(".player-close").focus();
-    });
-  }
-  player.querySelector(".player-close").addEventListener("click",()=>player.close());
-  player.addEventListener("click",e=>{
-    if(e.target!==player) return;
-    const rect=player.getBoundingClientRect();
-    if(e.clientX<rect.left||e.clientX>rect.right||e.clientY<rect.top||e.clientY>rect.bottom) player.close();
+const clips=[...document.querySelectorAll(".reel video")];
+if(clips.length){
+  const visibility=new IntersectionObserver(entries=>{
+    for(const entry of entries) if(!entry.isIntersecting) entry.target.pause();
   });
-  player.addEventListener("close",()=>{box.replaceChildren();trigger?.focus({preventScroll:true});});
+  for(const video of clips){
+    const card=video.closest(".reel");
+    const start=card.querySelector(".reel-start"),label=start.querySelector(".watch span");
+    const notice=card.querySelector(".reel-notice");
+    const title=document.getElementById(video.getAttribute("aria-labelledby")).textContent;
+    function showStart(text){
+      video.controls=false;video.tabIndex=-1;
+      card.classList.remove("has-controls");
+      label.textContent=text;start.setAttribute("aria-label",text+" · "+title);start.hidden=false;
+    }
+    function failed(){
+      showStart("Reintentar");notice.hidden=false;
+    }
+    showStart("Ver video");
+    start.addEventListener("click",event=>{
+      notice.hidden=true;
+      if(video.error) video.load();
+      if(video.ended) video.currentTime=0;
+      start.hidden=true;video.controls=true;video.tabIndex=0;card.classList.add("has-controls");
+      // Safari grants audible playback to this gesture. Keep play() in the click handler.
+      const playback=video.play();
+      if(event.detail===0) video.focus({preventScroll:true});
+      playback.catch(error=>{
+        if(error.name==="AbortError"){
+          if(video.paused&&!video.error) showStart("Continuar");
+        }else failed();
+      });
+    });
+    video.addEventListener("play",()=>{for(const other of clips) if(other!==video) other.pause()});
+    video.addEventListener("ended",()=>showStart("Volver a ver"));
+    video.addEventListener("error",failed);
+    visibility.observe(video);
+  }
+  const pauseAll=()=>{for(const video of clips) video.pause()};
+  document.addEventListener("visibilitychange",()=>{if(document.hidden) pauseAll()});
+  window.addEventListener("pagehide",pauseAll);
 }

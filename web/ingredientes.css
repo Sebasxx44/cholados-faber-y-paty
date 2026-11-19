@@ -65,6 +65,7 @@ body:has(dialog[open]){overflow:visible}
 .ingredient-view .has-model img{visibility:hidden}
 .rotate-hint{position:absolute;pointer-events:none;bottom:8px;inset-inline:10px;text-align:center;font-size:.78rem;font-weight:600}
 .recipe-details{grid-area:details;display:grid;gap:clamp(12px,2vw,22px);min-width:0}
+.recipe-info{display:grid;gap:inherit;min-width:0}
 .recipe-options{display:flex;flex-wrap:wrap;gap:7px;list-style:none;padding:0;margin:0}
 .recipe-options button{display:flex;align-items:center;gap:7px;text-align:left;border-radius:22px;min-height:44px;padding:4px 13px 4px 7px;border:1px solid color-mix(in srgb,var(--ink) 37%,transparent);font-weight:650;font-size:.93rem;line-height:1.16}
 .recipe-options img{width:32px;height:32px;object-fit:contain}
@@ -94,4 +95,18 @@ html:not(.js) .recipe-options,html:not(.js) .recipe-note{display:none}
   .recipe-panel{--space:14px;gap:12px 20px;grid-template-columns:1fr 1.2fr}
   .recipe-intro h2{font-size:26px}.recipe-intro>p{margin-bottom:3px}
   .recipe-display{height:clamp(154px,43svh,232px)}.recipe-details{gap:7px}.recipe-note h3{font-size:20px}
+}
+@media (max-width:767px), (pointer:coarse) and (max-width:980px){
+  .recipe-panel{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"intro intro" "display details" "order order"}
+  .recipe-details{display:contents}
+  .recipe-info{grid-area:details;gap:12px}
+  .recipe-order{
+    grid-area:order;display:flex;align-items:center;justify-content:center;justify-self:stretch;
+    width:100%;min-height:50px;padding:12px 18px;gap:9px;border-radius:28px;
+    color:var(--paper);background:var(--ink);text-decoration:none;font-size:1rem;
+  }
+  .recipe-order:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+}
+@media (max-width:620px) and (orientation:portrait){
+  .recipe-panel{grid-template-columns:minmax(0,1fr);grid-template-areas:"intro" "display" "details" "order"}
 }

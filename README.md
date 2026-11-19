@@ -16,9 +16,9 @@ Se necesita Node.js 20 o posterior. `npm run build` genera la portada, seis fich
 
 Se reconstruyó la foto de apertura a partir de las fotografías de la misma inauguración. El logotipo y los nombres de los productos proceden de la carta de Faber & Paty. Las imágenes de estudio, las mallas y los ingredientes del escaparate son interpretaciones visuales del cartel. [Carrusel de la inauguración](https://www.instagram.com/p/Df0cDA-DEEu/)
 
-Los videos se reproducen desde las publicaciones de la cuenta cuando la persona los abre. [Preparación de las mieles](https://www.instagram.com/reel/DfViRQFNpjt/) · [Apertura de Armenia](https://www.instagram.com/reel/DfxR0fpBfVq/) · [Del puesto al nuevo local](https://www.instagram.com/reel/DfvSFLePrBE/)
+Los tres reels se reproducen con sonido en su propia tarjeta al pulsar «Ver video». Los archivos MP4 están en `assets/reels` y se solicitan al iniciar la reproducción. [Preparación de las mieles](https://www.instagram.com/reel/DfViRQFNpjt/) · [Apertura de Armenia](https://www.instagram.com/reel/DfxR0fpBfVq/) · [Del puesto al nuevo local](https://www.instagram.com/reel/DfvSFLePrBE/)
 
-El recorrido de la historia utiliza fotogramas del puesto en Quimbaya, el servicio de las mieles y la adecuación del local. El mensaje de los 23 años corresponde a la publicación de la inauguración. [El puesto](https://www.tiktok.com/@choladospatyfaber/video/7701400293807820038) · [Las mieles](https://www.instagram.com/reel/DfViRQFNpjt/) · [El montaje](https://www.instagram.com/reel/DfpfHpDucQ_/) · [La inauguración](https://www.instagram.com/p/Df0cDA-DEEu/)
+«Nuestra historia» muestra las cuatro fotografías del carrusel de la inauguración en su orden original. Los tres retratos de la familia juegan con el brillo de la foto y el álbum cierra con una fotografía antigua del puesto. El mensaje de los 23 años proviene del pie de esa misma publicación. [Carrusel de la inauguración](https://www.instagram.com/p/Df0cDA-DEEu/)
 
 Las fichas y la vitrina comparten los desgloses de la carta y los modelos de ingredientes. Las piezas se pueden explorar con el dedo, el ratón o las flechas del teclado. El enlace de WhatsApp de cada ficha prepara un mensaje con el nombre del producto.
 

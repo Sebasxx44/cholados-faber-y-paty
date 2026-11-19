@@ -11,6 +11,7 @@ const product = s => "/sabores/"+s+"/";
 const scene = s => "/#sabor-"+s;
 const orderURL = p => whatsapp+"?text="+encodeURIComponent("Hola, Faber y Paty. Quisiera hacer un pedido de "+p.nombre.toLocaleLowerCase("es-CO")+".");
 const reelURL = r => "https://www.instagram.com/reel/"+r.id+"/";
+const openingPost = "https://www.instagram.com/p/Df0cDA-DEEu/";
 const mapURL = s => "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.busqueda);
 const symbols = {
   pin:'<path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.3"/>',
@@ -83,9 +84,12 @@ function menu() {
 function videos() {
   const panels=reels.map(r=>`<article class="journey-slide video-${r.slug}"><div class="journey-inner wrap">
     <div class="journey-copy"><p class="journey-context">En video <span>·</span> ${r.lugar} <span>·</span> ${r.segundos} s</p>
-    <h3>${r.titulo}</h3><p>${r.texto}</p><a class="under reel-profile" href="${instagram}" target="_blank" rel="noopener">${icon("ig")} @choladosfaberypaty</a></div>
-    <a class="reel" href="${reelURL(r)}" data-reel="${r.id}" data-title="${esc(r.titulo)}" target="_blank" rel="noopener" aria-label="Reproducir ${esc(r.titulo)}">
-    <img src="/assets/reels/${r.slug}.webp" alt="" width="680" height="1209" loading="lazy" decoding="async"><span class="watch">${icon("play")} Ver video</span></a></div></article>`);
+    <h3 id="reel-${r.slug}">${r.titulo}</h3><p>${r.texto}</p><a class="under reel-profile" href="${reelURL(r)}" target="_blank" rel="noopener">${icon("ig")} Ver en Instagram</a></div>
+    <div class="reel">
+      <video aria-labelledby="reel-${r.slug}" width="720" height="1280" controls playsinline preload="none" poster="/assets/reels/${r.slug}.webp" src="/assets/reels/${r.slug}.mp4"><a href="${reelURL(r)}">Ver ${r.titulo} en Instagram</a></video>
+      <button class="reel-start" type="button" aria-label="Reproducir ${esc(r.titulo)}" hidden><span class="watch">${icon("play")}<span>Ver video</span></span></button>
+      <p class="reel-notice" role="status" hidden>El video no pudo cargarse. <a href="${reelURL(r)}" target="_blank" rel="noopener">Abrir en Instagram</a></p>
+    </div></div></article>`);
   return journey("videos","Videos de Instagram",panels,"proceso","Continuar a nuestra historia");
 }
 
@@ -99,24 +103,20 @@ function journey(id,title,panels,next,skip){
 
 function history(){
   const entries=[
-    ["puesto","Quimbaya","El puesto del parque","En el parque de Quimbaya, la familia sirve cholados bajo el toldo rojo.","/assets/historia/puesto.webp","El puesto de Faber y Paty bajo su toldo rojo en Quimbaya."],
-    ["preparacion","La preparación","Hielo y mieles","Primero va el hielo raspado. Después llegan las mieles de colores que se ven caer sobre el vaso.","/assets/historia/preparacion.webp","Una persona del equipo sirve miel roja sobre el hielo en el puesto."],
-    ["montaje","El nuevo local","Antes de abrir","En Armenia, Faber pinta a mano una pieza para el local. Detrás ya asoma el rosa de las paredes.","/assets/historia/montaje.webp","Faber pintando una pieza del nuevo local de Armenia."],
-    ["apertura","La familia, el día de la apertura","¡Esto apenas comienza!","Después de tanto esfuerzo, trabajo y constancia, hoy empezamos a ver los frutos de un sueño que nació hace mucho tiempo.","/assets/marca/local.webp","La familia frente a su nuevo local de Armenia el día de la inauguración."]
+    ["retrato","Armenia","El día de la apertura","La familia se reunió frente al local de la Calle 20 para la foto de inauguración.","La familia frente al letrero de Faber & Paty junto al arco de globos. El texto pide subir el brillo de la foto."],
+    ["brillo","El álbum de la familia","Un poco más de luz","En la segunda foto del carrusel se aclara la fachada. Los tres siguen en el mismo lugar.","El mismo retrato con más brillo y el texto «No tanto, bájale porfa»."],
+    ["inicio","El álbum de la familia","Volver al inicio","La tercera foto se oscurece. La familia cierra el juego del brillo con una foto que lleva años guardada.","La foto de la inauguración con menos luz y un texto que pide volver al inicio."],
+    ["apertura","Los primeros años","¡Esto apenas comienza!","Después de tanto esfuerzo, trabajo y constancia, hoy empezamos a ver los frutos de un sueño que nació hace mucho tiempo.","Una mano sostiene una fotografía antigua de tres personas en un puesto con un letrero de cholao."]
   ];
-  const panels=entries.map(([id,context,title,copy,img,alt])=>{
-    const opening=id==="apertura";
-    const picture=opening?`<picture><source media="(max-width:680px) and (orientation:portrait)" srcset="/assets/marca/local-vertical.webp"><img src="${img}" alt="${alt}" width="1920" height="1080" loading="lazy" decoding="async"></picture>`:`<img src="${img}" alt="${alt}" width="720" height="1280" loading="lazy" decoding="async">`;
-    const narrative=opening?`<blockquote cite="https://www.instagram.com/p/Df0cDA-DEEu/"><p>${copy}</p><p class="quote-lead">23 años de historia y muchos sueños por cumplir.</p><h3>${title}</h3></blockquote><a class="under" href="https://www.instagram.com/p/Df0cDA-DEEu/" target="_blank" rel="noopener">Faber &amp; Paty en Instagram</a>`:`<h3>${title}</h3><p>${copy}</p>`;
+  const panels=entries.map(([id,context,title,copy,alt],i)=>{
+    const picture=`<img src="/assets/historia/inauguracion-${i+1}.jpg" alt="${esc(alt)}" width="1080" height="608" loading="lazy" decoding="async">`;
+    const narrative=id==="apertura"?`<blockquote cite="${openingPost}"><p>${copy}</p><p class="quote-lead">23 años de historia y muchos sueños por cumplir.</p><h3>${title}</h3></blockquote><a class="under" href="${openingPost}" target="_blank" rel="noopener">Ver el carrusel original</a>`:`<h3>${title}</h3><p>${copy}</p>`;
     return `<article class="journey-slide history-${id}"><div class="journey-inner wrap"><div class="journey-copy"><p class="journey-context">Nuestra historia <span>·</span> ${context}</p>${narrative}</div><figure class="history-photo">${picture}</figure></div></article>`;
   });
   return journey("proceso","Nuestra historia",panels,"sedes","Continuar a las sedes");
 }
 function locations() {
   return `<section class="places-section" id="sedes"><div class="wrap"><div class="section-head"><h2>Dónde estamos</h2></div><div class="places-grid">${sedes.map((s,i)=>`<article class="place-card place-${i}"><div class="place-line">${icon("pin")}<span>${s.lugar}</span></div><h3>${s.ciudad}</h3><p>${s.direccion}</p><a class="under" href="${esc(mapURL(s))}" target="_blank" rel="noopener">Cómo llegar</a></article>`).join("")}</div></div></section>`;
-}
-function player() {
-  return `<dialog class="player" aria-labelledby="video-title"><div class="player-head"><h2 id="video-title">Video de Faber y Paty</h2><button type="button" class="player-close" aria-label="Cerrar video">${icon("close")}</button></div><div class="player-box"></div><a class="player-source under" href="${instagram}" target="_blank" rel="noopener">Ver en Instagram</a></dialog>`;
 }
 function recipePanel(p,instance) {
   const items=p.receta.map(key=>ingredientes[key]),first=items[0];
@@ -126,9 +126,9 @@ function recipePanel(p,instance) {
     <header class="recipe-intro"><p>Ingredientes</p><h2 id="receta-${instance}-${p.id}"><span class="sr-only">Ingredientes de </span>${p.nombre}</h2></header>
     <div class="recipe-display"><div class="ingredient-view" data-slug="ingredientes/${first.pieza}" tabindex="-1" role="group" aria-label="${esc(first.nombre)}">
     <span class="glass-form"><img src="/assets/ingredientes/${first.pieza}.webp" alt="${esc(first.nombre)}" width="360" height="360" decoding="async"></span></div><span class="rotate-hint" hidden>Arrastra para girar</span></div>
-    <div class="recipe-details"><ul class="recipe-options" aria-label="Elegir un ingrediente">${triggers}</ul>
+    <div class="recipe-details"><div class="recipe-info"><ul class="recipe-options" aria-label="Elegir un ingrediente">${triggers}</ul>
     <div class="recipe-note" aria-live="polite" aria-atomic="true"><h3>${first.nombre}</h3><p>${first.detalle}</p></div>
-    <noscript><dl class="plain-ingredients">${items.map(it=>`<dt>${it.nombre}</dt><dd>${it.detalle}</dd>`).join("")}</dl></noscript>
+    <noscript><dl class="plain-ingredients">${items.map(it=>`<dt>${it.nombre}</dt><dd>${it.detalle}</dd>`).join("")}</dl></noscript></div>
     <a class="under recipe-order" href="${esc(orderURL(p))}" target="_blank" rel="noopener">${icon("wa")} Pedir este sabor</a></div></div>`;
 }
 function recipeDialog(){
@@ -146,7 +146,7 @@ function detail(p, index) {
 await mkdir(out,{recursive:true});
 await Promise.all(["web","assets"].map(dir=>cp(path.join(root,dir),dir==="assets"?path.join(out,dir):out,{recursive:true})));
 const page = layout({title:"Faber & Paty · Cholados y granizados en Quindío",description:"Conoce los cholados, granizados y limonadas de Faber y Paty. Recorre los seis sabores y encuentra el puesto en Quimbaya y el local de Armenia.",home:true,
-  body:`<main id="contenido">${renderStage()}${menu()}${videos()}${history()}${locations()}</main>${player()}${recipeDialog()}`});
+  body:`<main id="contenido">${renderStage()}${menu()}${videos()}${history()}${locations()}</main>${recipeDialog()}`});
 await writeFile(path.join(out,"index.html"),page);
 for (const [i,p] of sabores.entries()) {
   const dest=path.join(out,"sabores",p.id); await mkdir(dest,{recursive:true});

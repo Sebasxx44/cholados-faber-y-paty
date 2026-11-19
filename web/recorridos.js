@@ -28,6 +28,7 @@ function setup(section){
     for(const [i,slide] of slides.entries()){
       slide.inert=i!==index;
       slide.setAttribute("aria-hidden",String(i!==index));
+      if(i!==index) slide.querySelector("video")?.pause();
     }
     const ink=getComputedStyle(slides[index]).getPropertyValue("--tone-ink");
     section.style.setProperty("--nav-ink",ink);
@@ -78,7 +79,7 @@ function setup(section){
 
 function connect(){
   let frame=0,measureAtFrame=true,finger=null,swallowClick=0,watchingWheel=false;
-  const busy=()=>!!document.querySelector("dialog[open], .nav-mobile[open]");
+  const busy=()=>!!(document.fullscreenElement||document.querySelector("dialog[open], .nav-mobile[open]"));
   const at=y=>galleries.find(g=>g.position(y));
   function refresh(){
     frame=0;
@@ -124,7 +125,10 @@ function connect(){
     finger=null;swallowClick=0;
     if(e.touches.length!==1||busy()) return;
     const gallery=at(scrollY);if(!gallery) return;
-    const touch=e.touches[0];finger={gallery,index:gallery.index,x:touch.clientX,y:touch.clientY,used:false};
+    const touch=e.touches[0];
+    const player=e.target.closest?.("video[controls]");
+    if(player && touch.clientY>=player.getBoundingClientRect().bottom-68) return;
+    finger={gallery,index:gallery.index,x:touch.clientX,y:touch.clientY,used:false};
   },{passive:true});
   function touchMove(e){
     if(e.touches.length!==1){finger=null;return}
@@ -143,7 +147,7 @@ function connect(){
     if(e.detail&&performance.now()<swallowClick&&e.target.closest(".journey")){e.preventDefault();e.stopPropagation()}
   },true);
   window.addEventListener("keydown",e=>{
-    if(e.defaultPrevented||busy()||e.ctrlKey||e.altKey||e.metaKey||e.target.closest?.("input,textarea,select,summary,[contenteditable=true]")) return;
+    if(e.defaultPrevented||busy()||e.ctrlKey||e.altKey||e.metaKey||e.target.closest?.("input,textarea,select,summary,video,[contenteditable=true]")) return;
     if(e.key===" "&&e.target.closest?.("button,a")) return;
     const step={ArrowDown:1,ArrowRight:1,PageDown:1,ArrowUp:-1,ArrowLeft:-1,PageUp:-1," ":e.shiftKey?-1:1}[e.key];
     if(!step) return;
