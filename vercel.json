@@ -10,14 +10,14 @@
       "permanent": true
     },
     {
-      "source": "/sedes/:path*",
+      "source": "/sedes/(.*)",
       "destination": "/",
       "permanent": true
     }
   ],
   "headers": [
     {
-      "source": "/sabores/:path*",
+      "source": "/sabores/(.*)",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, follow" }
       ]
