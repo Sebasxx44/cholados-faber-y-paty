@@ -3,7 +3,25 @@
   "buildCommand": "node scripts/build.mjs",
   "outputDirectory": "dist",
   "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/sedes/:path*",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "headers": [
+    {
+      "source": "/sabores/:path*",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, follow" }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [

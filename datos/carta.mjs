@@ -25,7 +25,6 @@ export const sabores = [
   {
     id: "cholado", nombre: "Cholado", familia: "Con barquillo",
     anchoFoto: 905,
-    descripcion: "Cholado con hielo raspado, fruta, mieles y barquillos. Encuentra el puesto en el parque de Quimbaya o el local de la Calle 20 en Armenia.",
     nota: "Fruta en capas y hielo raspado",
     texto: "Hielo raspado, fruta y mieles de colores. Los barquillos se sirven al final, para comerlos crujientes.",
     corto: "Fruta, hielo raspado y barquillos.",
@@ -36,7 +35,6 @@ export const sabores = [
   {
     id: "maracumango", nombre: "Maracumango", familia: "Con barquillo",
     anchoFoto: 762,
-    descripcion: "Mango, maracuyá y hielo bajo dos barquillos. Conoce el maracumango de Faber & Paty y consulta dónde pedirlo en Armenia o Quimbaya.",
     nota: "Mango y maracuyá",
     texto: "Mango y maracuyá se mezclan en un vaso de hielo y fruta. Los tonos amarillos y rojos se encuentran debajo de los barquillos.",
     corto: "Mango, maracuyá y hielo.",
@@ -47,7 +45,6 @@ export const sabores = [
   {
     id: "granizado", nombre: "Granizados", familia: "Con barquillo",
     anchoFoto: 949,
-    descripcion: "Granizado de hielo fino con cobertura oscura y dos barquillos. Consulta la carta de Faber & Paty y cómo llegar a Armenia o al parque de Quimbaya.",
     nota: "Hielo fino con barquillos",
     texto: "Hielo de textura fina con una cobertura oscura y dos barquillos crujientes.",
     corto: "Hielo fino y barquillos crujientes.",
@@ -58,7 +55,6 @@ export const sabores = [
   {
     id: "raspado", nombre: "Raspado", familia: "Con barquillo",
     anchoFoto: 895,
-    descripcion: "Raspado con miel de la casa y barquillos crujientes. Mira cómo se sirve y dónde pedirlo en el centro de Armenia o en el parque principal de Quimbaya.",
     nota: "Hielo raspado y miel",
     texto: "Hielo raspado con miel que va tiñendo el vaso de rojo. Arriba quedan el hielo y los barquillos.",
     corto: "Hielo raspado, miel y barquillo.",
@@ -69,7 +65,6 @@ export const sabores = [
   {
     id: "limonada-maracuya", nombre: "Limonada de maracuyá", familia: "Limonadas",
     anchoFoto: 933,
-    descripcion: "La limonada de maracuyá lleva limón, pulpa de maracuyá y hielo. Encuéntrala en la carta de Faber & Paty en Armenia y Quimbaya, Quindío.",
     nota: "Cítrica y tropical",
     texto: "Limón y maracuyá en una bebida fría, de color ámbar y sabor cítrico.",
     corto: "Limón, maracuyá y hielo.",
@@ -80,7 +75,6 @@ export const sabores = [
   {
     id: "limonada-especial", nombre: "Limonada especial", familia: "Limonadas",
     anchoFoto: 888,
-    descripcion: "Conoce la limonada especial, la bebida roja de la casa. Consulta sus ingredientes y pídela por WhatsApp en el puesto de Quimbaya o el local de Armenia.",
     nota: "La limonada roja de la casa",
     texto: "La limonada roja de Faber & Paty se sirve bien fría. Pídela en el puesto del parque o en el local de Armenia.",
     corto: "La limonada roja de Faber & Paty.",
@@ -95,23 +89,15 @@ export const sedes = [
     id: "quimbaya", ciudad: "Quimbaya", lugar: "El puesto del parque",
     calle: "Parque principal de Quimbaya", direccion: "Parque principal de Quimbaya, Quindío",
     busqueda: "Parque Principal de Quimbaya, Quindío, Colombia",
-    descripcion: "Encuentra a Faber & Paty en el parque principal de Quimbaya. Conoce el cholado de fruta, el raspado con miel y las dos limonadas. Consulta cómo llegar.",
-    introduccion: "En el parque principal servimos el cholado por capas. Primero el hielo raspado, luego la fruta y las mieles de la casa. Los barquillos van de últimos para que lleguen crujientes.",
-    foto: "/assets/historia/inauguracion-4.jpg", ancho: 1080, alto: 608,
-    alt: "Una mano sostiene una foto antigua de la familia junto a su mostrador de cholados.",
-    pie: "El puesto de los primeros años, en una foto del álbum familiar.",
-    referencia: "https://www.instagram.com/reel/DfViRQFNpjt/", enlace: "Ver cómo servimos las mieles en Quimbaya"
+    descripcion: "En el puesto del parque servimos el cholado con fruta y el raspado con miel de la casa. También puedes pedir una limonada de maracuyá o la especial.",
+    foto: "/assets/historia/inauguracion-4.jpg"
   },
   {
     id: "armenia", ciudad: "Armenia", lugar: "El local",
     calle: "Calle 20 #14-17", direccion: "Calle 20 #14-17, Armenia, Quindío",
     busqueda: "Calle 20 #14-17, Armenia, Quindío, Colombia",
-    descripcion: "Visita Faber & Paty en la Calle 20 #14-17, en el centro de Armenia, Quindío. Revisa la carta de cholados, raspados y limonadas y consulta por WhatsApp.",
-    introduccion: "Abrimos el local del centro de Armenia en noviembre de 2026. En la puerta, la carta reúne los seis sabores del negocio familiar, desde el cholado con fruta hasta la limonada de maracuyá.",
-    foto: "/assets/marca/local.webp", ancho: 1920, alto: 1080,
-    alt: "Faber y Paty frente al local de la Calle 20, con el aviso de cholados y granizados sobre la entrada.",
-    pie: "La familia el día de la apertura del local de Armenia.",
-    referencia: "https://www.instagram.com/reel/DfxR0fpBfVq/", enlace: "Ver la invitación a la apertura en Armenia"
+    descripcion: "En el centro de Armenia encuentras los seis sabores de la carta. Si vienes por una limonada, elige entre la de maracuyá y la roja de la casa.",
+    foto: "/assets/marca/local.webp"
   }
 ];
 

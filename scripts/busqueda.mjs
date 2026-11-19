@@ -1,7 +1,8 @@
 import { site, instagram, reels, sabores, sedes, telefono, tiktok } from "../datos/carta.mjs";
 
 export const product = id => "/sabores/"+id+"/";
-export const locationPath = id => "/sedes/"+id+"/";
+export const locationAnchor = id => "/#sede-"+id;
+export const scene = id => "/#sabor-"+id;
 export const mapURL = sede => "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(sede.busqueda);
 export const productImage = id => "/assets/productos/"+id+".webp";
 
@@ -10,17 +11,16 @@ const websiteId = site+"/#web";
 const menuId = site+"/#carta";
 
 function menuItem(p) {
-  const url = site+product(p.id);
+  const url = site+scene(p.id);
   return {
-    "@type": "MenuItem", "@id": url+"#sabor", url, name: p.nombre,
+    "@type": "MenuItem", "@id": url, url, name: p.nombre,
     description: p.texto, image: site+productImage(p.id)
   };
 }
 
 function branch(s) {
-  const url = site+locationPath(s.id);
   return {
-    "@type": "FoodEstablishment", "@id": url+"#negocio", url, name: "Faber & Paty",
+    "@type": "FoodEstablishment", "@id": site+locationAnchor(s.id), url: site+"/", name: "Faber & Paty",
     parentOrganization: {"@id": brandId, "@type": "Organization", name: "Faber & Paty", url: site+"/"},
     description: s.descripcion, telephone: telefono,
     address: {
@@ -43,25 +43,8 @@ export function homeData() {
       }))},
     {"@type": "Organization", "@id": brandId, name: "Faber & Paty", alternateName: "Cholados Faber y Paty",
       url: site+"/", logo: site+"/assets/marca/logo.webp", telephone: telefono, sameAs: [instagram,tiktok],
-      location: sedes.map(s=>({"@id": site+locationPath(s.id)+"#negocio"}))},
+      location: sedes.map(s=>({"@id": site+locationAnchor(s.id)}))},
     ...sedes.map(branch),
     {"@type": "Menu", "@id": menuId, url: menuId, name: "La carta de Faber & Paty", inLanguage: "es-CO", hasMenuItem: sabores.map(menuItem)}
   ];
 }
-
-function detailData(entity, parentName, parentPath, pageName) {
-  const url = entity.url;
-  const crumbId = url+"#ruta";
-  return [
-    {"@type": "WebPage", "@id": url+"#pagina", url, name: pageName, inLanguage: "es-CO",
-      isPartOf: {"@id": websiteId}, mainEntity: {"@id": entity["@id"]}, breadcrumb: {"@id": crumbId}},
-    {"@type": "BreadcrumbList", "@id": crumbId, itemListElement: [
-      {"@type":"ListItem", position:1, name:parentName, item:site+parentPath},
-      {"@type":"ListItem", position:2, name:pageName, item:url}
-    ]},
-    entity
-  ];
-}
-
-export const productData = p => detailData(menuItem(p), "La carta", "/#carta", p.nombre);
-export const locationData = s => detailData(branch(s), "Dónde estamos", "/#sedes", s.ciudad);
